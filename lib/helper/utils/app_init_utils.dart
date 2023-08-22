@@ -21,7 +21,6 @@ class AppInitUtils {
     Hive.registerAdapter(AlarmModelAdapter());
     Hive.registerAdapter(TimeOfDayAdapter());
     final box = await Hive.openBox(ConstantsResource.HIVE_ALARM_BOX_NAME);
-    await box.add(AlarmModel(time: TimeOfDay.now(), date: DateTime.now()));
 
     getIt.registerLazySingleton<Box>(() => box);
   }

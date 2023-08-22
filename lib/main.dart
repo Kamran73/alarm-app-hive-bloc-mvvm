@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => MainScreenBloc(alarmRepository: getIt())
-        ..add(const MainScreenEvent.getAlarmFromDB()),
+        ..add(const MainScreenEvent.getAlarmFromDB())
+        ..add(const MainScreenEvent.listenToChanges()),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Task 10',

@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:task_10/data_provider/models/alarm_model/alarm_model.dart';
 import 'package:task_10/data_provider/models/failure/failure.dart';
@@ -33,12 +32,9 @@ class LocalAlarmRepoImpl implements AlarmRepository<AlarmModel> {
   @override
   Stream<Either<Failure, List<AlarmModel>>> listenToDataChanges() {
     return hiveAlarmBox.watch().map((event) {
-      debugPrint('some thing happened');
       try {
         return right(hiveAlarmBox.values.map((hiveDataModelItem) {
           final result = hiveDataModelItem as AlarmModel;
-          debugPrint(
-              'result time is ${result.time.minute}  ${hiveAlarmBox.values.length}');
           return result;
         }).toList());
       } catch (exception) {
@@ -64,8 +60,6 @@ class LocalAlarmRepoImpl implements AlarmRepository<AlarmModel> {
       if (hiveAlarmBox.values.isNotEmpty) {
         return right(hiveAlarmBox.values.map((hiveDataModelItem) {
           final result = hiveDataModelItem as AlarmModel;
-          debugPrint(
-              'result time is ${result.time.minute}  ${hiveAlarmBox.values.length}');
           return result;
         }).toList());
       } else {

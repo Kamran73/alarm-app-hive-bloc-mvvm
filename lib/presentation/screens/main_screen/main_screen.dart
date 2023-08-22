@@ -14,39 +14,41 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsResource.MAIN_SCREEN_BG_CLR,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async => await _selectDate(context),
-        backgroundColor: ColorsResource.ADD_BTN_CLR,
-        child: const Icon(Icons.add),
-      ),
-      body: Padding(
-        padding:
-            const EdgeInsets.symmetric(vertical: DimensionsResource.PIXEL_10),
-        child: BlocBuilder<MainScreenBloc, MainScreenState>(
-            builder: (context, state) {
-          return state.when(
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            loaded: (alarmList) => ListView.builder(
-                itemBuilder: (context, index) {
-                  return AlarmContainer(
-                    time: alarmList[index].time,
-                    date: alarmList[index].date,
-                  );
-                },
-                itemCount: alarmList.length),
-            empty: () => const Center(
-              child: Text('empty'),
-            ),
-            error: (errorMessage) => Center(
-              child: Text(errorMessage),
-            ),
-          );
-        }),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: ColorsResource.MAIN_SCREEN_BG_CLR,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async => await _selectDate(context),
+          backgroundColor: ColorsResource.ADD_BTN_CLR,
+          child: const Icon(Icons.add),
+        ),
+        body: Padding(
+          padding:
+              const EdgeInsets.symmetric(vertical: DimensionsResource.PIXEL_10),
+          child: BlocBuilder<MainScreenBloc, MainScreenState>(
+              builder: (context, state) {
+            return state.when(
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              loaded: (alarmList) => ListView.builder(
+                  itemBuilder: (context, index) {
+                    return AlarmContainer(
+                      time: alarmList[index].time,
+                      date: alarmList[index].date,
+                    );
+                  },
+                  itemCount: alarmList.length),
+              empty: () => const Center(
+                child: Text('empty'),
+              ),
+              error: (errorMessage) => Center(
+                child: Text(errorMessage),
+              ),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -149,7 +151,7 @@ class _AlarmContainerState extends State<AlarmContainer> {
           color: Colors.amberAccent,
         ),
         title: CustomText(
-          text: '$_hours:$_minutes $_period',
+          text: '$_hours:${_minutes >= 10 ? _minutes : '0$_minutes'} $_period',
           textStyle: Theme.of(context)
               .textTheme
               .titleLarge
@@ -161,7 +163,11 @@ class _AlarmContainerState extends State<AlarmContainer> {
   }
 
   void _extractTime() {
-    _hours = widget.time.hour;
+    if (widget.time.hour > 12) {
+      _hours = widget.time.hour - 12;
+    } else {
+      _hours = widget.time.hour;
+    }
     _minutes = widget.time.minute;
     if (widget.time.period == DayPeriod.am) {
       _period = 'am';

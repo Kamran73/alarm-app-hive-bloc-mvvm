@@ -8,9 +8,7 @@ import '../../../data_provider/models/failure/failure.dart';
 import '../../../repositories/alarm_repository.dart';
 
 part 'main_screen_bloc.freezed.dart';
-
 part 'main_screen_event.dart';
-
 part 'main_screen_state.dart';
 
 class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
@@ -55,7 +53,6 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
     await emit.forEach(
       alarmRepository.listenToDataChanges(),
       onData: (data) {
-        emit(const MainScreenState.loading());
         return data.fold((failure) {
           return MainScreenState.error(failure.errorMessage);
         }, (success) {
