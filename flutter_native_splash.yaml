@@ -1,0 +1,14 @@
+flutter_native_splash:
+  color: "#b6c1fd"
+  color-dark: "#b6c1fd"
+  image: assets/icons/alarm-icon.png
+  image-dark: assets/icons/alarm-icon.png
+  android_12:
+    image-dark: assets/icons/alarm-icon.png
+    image: assets/icons/alarm-icon.png
+    color: "#b6c1fd"
+    color-dark: "#b6c1fd"
+    icon_background_color_dark: "#b6c1fd"
+    icon_background_color: "#b6c1fd"
+  ios: true
+  android: true
