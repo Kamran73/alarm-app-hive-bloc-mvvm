@@ -18,35 +18,34 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$MainScreenEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(TimeOfDay time, DateTime date) saveAlarmToDB,
+    required TResult Function(AlarmModel alarm) saveAlarmToDB,
     required TResult Function() getAlarmFromDB,
     required TResult Function() listenToChanges,
-    required TResult Function(int index, TimeOfDay time, DateTime date)
+    required TResult Function(int index, AlarmModel alarm, bool? isToggled)
         updateAlarm,
-    required TResult Function(int index) deleteAlarm,
+    required TResult Function(int index, int id) deleteAlarm,
   }) =>
       throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult? Function(AlarmModel alarm)? saveAlarmToDB,
     TResult? Function()? getAlarmFromDB,
     TResult? Function()? listenToChanges,
-    TResult? Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult? Function(int index)? deleteAlarm,
+    TResult? Function(int index, AlarmModel alarm, bool? isToggled)?
+        updateAlarm,
+    TResult? Function(int index, int id)? deleteAlarm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult Function(AlarmModel alarm)? saveAlarmToDB,
     TResult Function()? getAlarmFromDB,
     TResult Function()? listenToChanges,
-    TResult Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult Function(int index)? deleteAlarm,
+    TResult Function(int index, AlarmModel alarm, bool? isToggled)? updateAlarm,
+    TResult Function(int index, int id)? deleteAlarm,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_SaveAlarmToDB value) saveAlarmToDB,
@@ -56,7 +55,6 @@ mixin _$MainScreenEvent {
     required TResult Function(_DeleteAlarm value) deleteAlarm,
   }) =>
       throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_SaveAlarmToDB value)? saveAlarmToDB,
@@ -102,7 +100,7 @@ abstract class _$$_SaveAlarmToDBCopyWith<$Res> {
           _$_SaveAlarmToDB value, $Res Function(_$_SaveAlarmToDB) then) =
       __$$_SaveAlarmToDBCopyWithImpl<$Res>;
   @useResult
-  $Res call({TimeOfDay time, DateTime date});
+  $Res call({AlarmModel alarm});
 }
 
 /// @nodoc
@@ -116,18 +114,13 @@ class __$$_SaveAlarmToDBCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? time = null,
-    Object? date = null,
+    Object? alarm = null,
   }) {
     return _then(_$_SaveAlarmToDB(
-      time: null == time
-          ? _value.time
-          : time // ignore: cast_nullable_to_non_nullable
-              as TimeOfDay,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      alarm: null == alarm
+          ? _value.alarm
+          : alarm // ignore: cast_nullable_to_non_nullable
+              as AlarmModel,
     ));
   }
 }
@@ -135,16 +128,14 @@ class __$$_SaveAlarmToDBCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_SaveAlarmToDB implements _SaveAlarmToDB {
-  const _$_SaveAlarmToDB({required this.time, required this.date});
+  const _$_SaveAlarmToDB({required this.alarm});
 
   @override
-  final TimeOfDay time;
-  @override
-  final DateTime date;
+  final AlarmModel alarm;
 
   @override
   String toString() {
-    return 'MainScreenEvent.saveAlarmToDB(time: $time, date: $date)';
+    return 'MainScreenEvent.saveAlarmToDB(alarm: $alarm)';
   }
 
   @override
@@ -152,12 +143,11 @@ class _$_SaveAlarmToDB implements _SaveAlarmToDB {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SaveAlarmToDB &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.date, date) || other.date == date));
+            (identical(other.alarm, alarm) || other.alarm == alarm));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, time, date);
+  int get hashCode => Object.hash(runtimeType, alarm);
 
   @JsonKey(ignore: true)
   @override
@@ -168,40 +158,41 @@ class _$_SaveAlarmToDB implements _SaveAlarmToDB {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(TimeOfDay time, DateTime date) saveAlarmToDB,
+    required TResult Function(AlarmModel alarm) saveAlarmToDB,
     required TResult Function() getAlarmFromDB,
     required TResult Function() listenToChanges,
-    required TResult Function(int index, TimeOfDay time, DateTime date)
+    required TResult Function(int index, AlarmModel alarm, bool? isToggled)
         updateAlarm,
-    required TResult Function(int index) deleteAlarm,
+    required TResult Function(int index, int id) deleteAlarm,
   }) {
-    return saveAlarmToDB(time, date);
+    return saveAlarmToDB(alarm);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult? Function(AlarmModel alarm)? saveAlarmToDB,
     TResult? Function()? getAlarmFromDB,
     TResult? Function()? listenToChanges,
-    TResult? Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult? Function(int index)? deleteAlarm,
+    TResult? Function(int index, AlarmModel alarm, bool? isToggled)?
+        updateAlarm,
+    TResult? Function(int index, int id)? deleteAlarm,
   }) {
-    return saveAlarmToDB?.call(time, date);
+    return saveAlarmToDB?.call(alarm);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult Function(AlarmModel alarm)? saveAlarmToDB,
     TResult Function()? getAlarmFromDB,
     TResult Function()? listenToChanges,
-    TResult Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult Function(int index)? deleteAlarm,
+    TResult Function(int index, AlarmModel alarm, bool? isToggled)? updateAlarm,
+    TResult Function(int index, int id)? deleteAlarm,
     required TResult orElse(),
   }) {
     if (saveAlarmToDB != null) {
-      return saveAlarmToDB(time, date);
+      return saveAlarmToDB(alarm);
     }
     return orElse();
   }
@@ -248,12 +239,10 @@ class _$_SaveAlarmToDB implements _SaveAlarmToDB {
 }
 
 abstract class _SaveAlarmToDB implements MainScreenEvent {
-  const factory _SaveAlarmToDB(
-      {required final TimeOfDay time,
-      required final DateTime date}) = _$_SaveAlarmToDB;
+  const factory _SaveAlarmToDB({required final AlarmModel alarm}) =
+      _$_SaveAlarmToDB;
 
-  TimeOfDay get time;
-  DateTime get date;
+  AlarmModel get alarm;
   @JsonKey(ignore: true)
   _$$_SaveAlarmToDBCopyWith<_$_SaveAlarmToDB> get copyWith =>
       throw _privateConstructorUsedError;
@@ -297,12 +286,12 @@ class _$_GetAlarmsFromDB implements _GetAlarmsFromDB {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(TimeOfDay time, DateTime date) saveAlarmToDB,
+    required TResult Function(AlarmModel alarm) saveAlarmToDB,
     required TResult Function() getAlarmFromDB,
     required TResult Function() listenToChanges,
-    required TResult Function(int index, TimeOfDay time, DateTime date)
+    required TResult Function(int index, AlarmModel alarm, bool? isToggled)
         updateAlarm,
-    required TResult Function(int index) deleteAlarm,
+    required TResult Function(int index, int id) deleteAlarm,
   }) {
     return getAlarmFromDB();
   }
@@ -310,11 +299,12 @@ class _$_GetAlarmsFromDB implements _GetAlarmsFromDB {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult? Function(AlarmModel alarm)? saveAlarmToDB,
     TResult? Function()? getAlarmFromDB,
     TResult? Function()? listenToChanges,
-    TResult? Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult? Function(int index)? deleteAlarm,
+    TResult? Function(int index, AlarmModel alarm, bool? isToggled)?
+        updateAlarm,
+    TResult? Function(int index, int id)? deleteAlarm,
   }) {
     return getAlarmFromDB?.call();
   }
@@ -322,11 +312,11 @@ class _$_GetAlarmsFromDB implements _GetAlarmsFromDB {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult Function(AlarmModel alarm)? saveAlarmToDB,
     TResult Function()? getAlarmFromDB,
     TResult Function()? listenToChanges,
-    TResult Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult Function(int index)? deleteAlarm,
+    TResult Function(int index, AlarmModel alarm, bool? isToggled)? updateAlarm,
+    TResult Function(int index, int id)? deleteAlarm,
     required TResult orElse(),
   }) {
     if (getAlarmFromDB != null) {
@@ -418,12 +408,12 @@ class _$_ListenToChanges implements _ListenToChanges {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(TimeOfDay time, DateTime date) saveAlarmToDB,
+    required TResult Function(AlarmModel alarm) saveAlarmToDB,
     required TResult Function() getAlarmFromDB,
     required TResult Function() listenToChanges,
-    required TResult Function(int index, TimeOfDay time, DateTime date)
+    required TResult Function(int index, AlarmModel alarm, bool? isToggled)
         updateAlarm,
-    required TResult Function(int index) deleteAlarm,
+    required TResult Function(int index, int id) deleteAlarm,
   }) {
     return listenToChanges();
   }
@@ -431,11 +421,12 @@ class _$_ListenToChanges implements _ListenToChanges {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult? Function(AlarmModel alarm)? saveAlarmToDB,
     TResult? Function()? getAlarmFromDB,
     TResult? Function()? listenToChanges,
-    TResult? Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult? Function(int index)? deleteAlarm,
+    TResult? Function(int index, AlarmModel alarm, bool? isToggled)?
+        updateAlarm,
+    TResult? Function(int index, int id)? deleteAlarm,
   }) {
     return listenToChanges?.call();
   }
@@ -443,11 +434,11 @@ class _$_ListenToChanges implements _ListenToChanges {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult Function(AlarmModel alarm)? saveAlarmToDB,
     TResult Function()? getAlarmFromDB,
     TResult Function()? listenToChanges,
-    TResult Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult Function(int index)? deleteAlarm,
+    TResult Function(int index, AlarmModel alarm, bool? isToggled)? updateAlarm,
+    TResult Function(int index, int id)? deleteAlarm,
     required TResult orElse(),
   }) {
     if (listenToChanges != null) {
@@ -507,7 +498,7 @@ abstract class _$$_UpdateAlarmCopyWith<$Res> {
           _$_UpdateAlarm value, $Res Function(_$_UpdateAlarm) then) =
       __$$_UpdateAlarmCopyWithImpl<$Res>;
   @useResult
-  $Res call({int index, TimeOfDay time, DateTime date});
+  $Res call({int index, AlarmModel alarm, bool? isToggled});
 }
 
 /// @nodoc
@@ -522,22 +513,22 @@ class __$$_UpdateAlarmCopyWithImpl<$Res>
   @override
   $Res call({
     Object? index = null,
-    Object? time = null,
-    Object? date = null,
+    Object? alarm = null,
+    Object? isToggled = freezed,
   }) {
     return _then(_$_UpdateAlarm(
       index: null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
-      time: null == time
-          ? _value.time
-          : time // ignore: cast_nullable_to_non_nullable
-              as TimeOfDay,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      alarm: null == alarm
+          ? _value.alarm
+          : alarm // ignore: cast_nullable_to_non_nullable
+              as AlarmModel,
+      isToggled: freezed == isToggled
+          ? _value.isToggled
+          : isToggled // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -546,18 +537,18 @@ class __$$_UpdateAlarmCopyWithImpl<$Res>
 
 class _$_UpdateAlarm implements _UpdateAlarm {
   const _$_UpdateAlarm(
-      {required this.index, required this.time, required this.date});
+      {required this.index, required this.alarm, this.isToggled});
 
   @override
   final int index;
   @override
-  final TimeOfDay time;
+  final AlarmModel alarm;
   @override
-  final DateTime date;
+  final bool? isToggled;
 
   @override
   String toString() {
-    return 'MainScreenEvent.updateAlarm(index: $index, time: $time, date: $date)';
+    return 'MainScreenEvent.updateAlarm(index: $index, alarm: $alarm, isToggled: $isToggled)';
   }
 
   @override
@@ -566,12 +557,13 @@ class _$_UpdateAlarm implements _UpdateAlarm {
         (other.runtimeType == runtimeType &&
             other is _$_UpdateAlarm &&
             (identical(other.index, index) || other.index == index) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.date, date) || other.date == date));
+            (identical(other.alarm, alarm) || other.alarm == alarm) &&
+            (identical(other.isToggled, isToggled) ||
+                other.isToggled == isToggled));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, index, time, date);
+  int get hashCode => Object.hash(runtimeType, index, alarm, isToggled);
 
   @JsonKey(ignore: true)
   @override
@@ -582,40 +574,41 @@ class _$_UpdateAlarm implements _UpdateAlarm {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(TimeOfDay time, DateTime date) saveAlarmToDB,
+    required TResult Function(AlarmModel alarm) saveAlarmToDB,
     required TResult Function() getAlarmFromDB,
     required TResult Function() listenToChanges,
-    required TResult Function(int index, TimeOfDay time, DateTime date)
+    required TResult Function(int index, AlarmModel alarm, bool? isToggled)
         updateAlarm,
-    required TResult Function(int index) deleteAlarm,
+    required TResult Function(int index, int id) deleteAlarm,
   }) {
-    return updateAlarm(index, time, date);
+    return updateAlarm(index, alarm, isToggled);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult? Function(AlarmModel alarm)? saveAlarmToDB,
     TResult? Function()? getAlarmFromDB,
     TResult? Function()? listenToChanges,
-    TResult? Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult? Function(int index)? deleteAlarm,
+    TResult? Function(int index, AlarmModel alarm, bool? isToggled)?
+        updateAlarm,
+    TResult? Function(int index, int id)? deleteAlarm,
   }) {
-    return updateAlarm?.call(index, time, date);
+    return updateAlarm?.call(index, alarm, isToggled);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult Function(AlarmModel alarm)? saveAlarmToDB,
     TResult Function()? getAlarmFromDB,
     TResult Function()? listenToChanges,
-    TResult Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult Function(int index)? deleteAlarm,
+    TResult Function(int index, AlarmModel alarm, bool? isToggled)? updateAlarm,
+    TResult Function(int index, int id)? deleteAlarm,
     required TResult orElse(),
   }) {
     if (updateAlarm != null) {
-      return updateAlarm(index, time, date);
+      return updateAlarm(index, alarm, isToggled);
     }
     return orElse();
   }
@@ -664,12 +657,12 @@ class _$_UpdateAlarm implements _UpdateAlarm {
 abstract class _UpdateAlarm implements MainScreenEvent {
   const factory _UpdateAlarm(
       {required final int index,
-      required final TimeOfDay time,
-      required final DateTime date}) = _$_UpdateAlarm;
+      required final AlarmModel alarm,
+      final bool? isToggled}) = _$_UpdateAlarm;
 
   int get index;
-  TimeOfDay get time;
-  DateTime get date;
+  AlarmModel get alarm;
+  bool? get isToggled;
   @JsonKey(ignore: true)
   _$$_UpdateAlarmCopyWith<_$_UpdateAlarm> get copyWith =>
       throw _privateConstructorUsedError;
@@ -681,7 +674,7 @@ abstract class _$$_DeleteAlarmCopyWith<$Res> {
           _$_DeleteAlarm value, $Res Function(_$_DeleteAlarm) then) =
       __$$_DeleteAlarmCopyWithImpl<$Res>;
   @useResult
-  $Res call({int index});
+  $Res call({int index, int id});
 }
 
 /// @nodoc
@@ -696,11 +689,16 @@ class __$$_DeleteAlarmCopyWithImpl<$Res>
   @override
   $Res call({
     Object? index = null,
+    Object? id = null,
   }) {
     return _then(_$_DeleteAlarm(
       index: null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
+              as int,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -709,14 +707,16 @@ class __$$_DeleteAlarmCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_DeleteAlarm implements _DeleteAlarm {
-  const _$_DeleteAlarm({required this.index});
+  const _$_DeleteAlarm({required this.index, required this.id});
 
   @override
   final int index;
+  @override
+  final int id;
 
   @override
   String toString() {
-    return 'MainScreenEvent.deleteAlarm(index: $index)';
+    return 'MainScreenEvent.deleteAlarm(index: $index, id: $id)';
   }
 
   @override
@@ -724,11 +724,12 @@ class _$_DeleteAlarm implements _DeleteAlarm {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DeleteAlarm &&
-            (identical(other.index, index) || other.index == index));
+            (identical(other.index, index) || other.index == index) &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, index);
+  int get hashCode => Object.hash(runtimeType, index, id);
 
   @JsonKey(ignore: true)
   @override
@@ -739,40 +740,41 @@ class _$_DeleteAlarm implements _DeleteAlarm {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(TimeOfDay time, DateTime date) saveAlarmToDB,
+    required TResult Function(AlarmModel alarm) saveAlarmToDB,
     required TResult Function() getAlarmFromDB,
     required TResult Function() listenToChanges,
-    required TResult Function(int index, TimeOfDay time, DateTime date)
+    required TResult Function(int index, AlarmModel alarm, bool? isToggled)
         updateAlarm,
-    required TResult Function(int index) deleteAlarm,
+    required TResult Function(int index, int id) deleteAlarm,
   }) {
-    return deleteAlarm(index);
+    return deleteAlarm(index, id);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult? Function(AlarmModel alarm)? saveAlarmToDB,
     TResult? Function()? getAlarmFromDB,
     TResult? Function()? listenToChanges,
-    TResult? Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult? Function(int index)? deleteAlarm,
+    TResult? Function(int index, AlarmModel alarm, bool? isToggled)?
+        updateAlarm,
+    TResult? Function(int index, int id)? deleteAlarm,
   }) {
-    return deleteAlarm?.call(index);
+    return deleteAlarm?.call(index, id);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(TimeOfDay time, DateTime date)? saveAlarmToDB,
+    TResult Function(AlarmModel alarm)? saveAlarmToDB,
     TResult Function()? getAlarmFromDB,
     TResult Function()? listenToChanges,
-    TResult Function(int index, TimeOfDay time, DateTime date)? updateAlarm,
-    TResult Function(int index)? deleteAlarm,
+    TResult Function(int index, AlarmModel alarm, bool? isToggled)? updateAlarm,
+    TResult Function(int index, int id)? deleteAlarm,
     required TResult orElse(),
   }) {
     if (deleteAlarm != null) {
-      return deleteAlarm(index);
+      return deleteAlarm(index, id);
     }
     return orElse();
   }
@@ -819,9 +821,11 @@ class _$_DeleteAlarm implements _DeleteAlarm {
 }
 
 abstract class _DeleteAlarm implements MainScreenEvent {
-  const factory _DeleteAlarm({required final int index}) = _$_DeleteAlarm;
+  const factory _DeleteAlarm(
+      {required final int index, required final int id}) = _$_DeleteAlarm;
 
   int get index;
+  int get id;
   @JsonKey(ignore: true)
   _$$_DeleteAlarmCopyWith<_$_DeleteAlarm> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1050,7 +1054,7 @@ class _$_Loaded implements _Loaded {
   @override
   List<AlarmModel> get alarmList {
     if (_alarmList is EqualUnmodifiableListView) return _alarmList;
-// ignore: implicit_dynamic_type
+    // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_alarmList);
   }
 

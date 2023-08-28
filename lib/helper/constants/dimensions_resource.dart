@@ -18,4 +18,8 @@ class DimensionsResource {
 
   // Icon sizes
   static const double ALARM_CONTAINER_LEADING_ICON_SIZE = 28;
+
+  // device pixels on which app looks perfect
+  static const double DEVICE_WIDTH = 392;
+  static const double DEVICE_HEIGHT = 856;
 }

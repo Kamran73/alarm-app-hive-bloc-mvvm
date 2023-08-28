@@ -1,51 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:task_10/business_logic/bloc/main_screen_bloc/main_screen_bloc.dart';
+import 'package:task_10/data_provider/models/alarm_model/alarm_model.dart';
 import 'package:task_10/helper/constants/colors_resource.dart';
+import 'package:task_10/helper/constants/constants_resource.dart';
 import 'package:task_10/helper/constants/dimensions_resource.dart';
+import 'package:task_10/helper/constants/images_resource.dart';
 import 'package:task_10/helper/constants/strings_resource.dart';
 import 'package:task_10/helper/extensions/context_extensions.dart';
+import 'package:task_10/helper/extensions/date_time_extension.dart';
 import 'package:task_10/helper/extensions/time_of_day_extension.dart';
 import 'package:task_10/helper/utils/dialog_utils.dart';
-import 'package:task_10/presentation/widgets/custom_text.dart';
+import 'package:task_10/presentation/widgets/loading_state_widget.dart';
 
-class MainScreen extends StatelessWidget {
+import '../../widgets/alarm_container.dart';
+import '../../widgets/empty_state_widget.dart';
+import '../../widgets/error_state_widget.dart';
+
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  late final MainScreenBloc _mainScreenBloc;
+
+  @override
+  void initState() {
+    FlutterNativeSplash.remove();
+    _mainScreenBloc = context.read<MainScreenBloc>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: ColorsResource.MAIN_SCREEN_BG_CLR,
+        backgroundColor: ColorsResource.PRIMARY_CLR,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
-          onPressed: () async => await _selectDate(context),
+          onPressed: () async => await _onFloatingActionButtonTapped(context),
           backgroundColor: ColorsResource.ADD_BTN_CLR,
           child: const Icon(Icons.add),
         ),
         body: Padding(
-          padding:
-              const EdgeInsets.symmetric(vertical: DimensionsResource.PIXEL_10),
+          padding: EdgeInsets.symmetric(
+              vertical: context.responsiveHeight(DimensionsResource.PIXEL_10)),
           child: BlocBuilder<MainScreenBloc, MainScreenState>(
               builder: (context, state) {
             return state.when(
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
-              loaded: (alarmList) => ListView.builder(
-                  itemBuilder: (context, index) {
-                    return AlarmContainer(
-                      time: alarmList[index].time,
-                      date: alarmList[index].date,
-                    );
-                  },
-                  itemCount: alarmList.length),
-              empty: () => const Center(
-                child: Text('empty'),
-              ),
-              error: (errorMessage) => Center(
-                child: Text(errorMessage),
-              ),
+              loading: () => const LoadingStateWidget(),
+              loaded: _alarmListLoaded,
+              empty: () => const EmptyStateWidget(
+                  assetUrl: ImagesResource.EMPTY_PAGE_SVG),
+              error: (errorMessage) =>
+                  ErrorStateWidget(errorMessage: errorMessage),
             );
           }),
         ),
@@ -53,126 +65,134 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final date = await DialogUtils.datePickerDialog(context: context);
-    await date.fold((failure) => null, (date) async {
-      if (date != null) {
-        await _selectTime(context, date);
-      }
-    });
+  // alarm list loaded widget to show all alarms
+  Widget _alarmListLoaded(List<AlarmModel> alarmList) {
+    return ListView.builder(
+        itemBuilder: (context, index) {
+          return AlarmContainer(
+            isActive: alarmList[index].isActive,
+            onSwitchToggled: (value) {
+              final AlarmModel updatedAlarm = AlarmModel(
+                  time: alarmList[index].time,
+                  date: alarmList[index].date,
+                  isActive: value,
+                  id: alarmList[index].id);
+              _mainScreenBloc.add(MainScreenEvent.updateAlarm(
+                index: index,
+                alarm: updatedAlarm,
+                // is toggled only checks if alarm update is about activating or deactivating alarm
+                // we passed true because we are activating/deactivating alarm without changing time/date
+                isToggled: true,
+              ));
+            },
+            time: alarmList[index].time,
+            date: alarmList[index].date,
+            onLongPressed: () => DialogUtils.alarmEditOrDeleteDialog(
+              context: context,
+              onDeletePressed: () {
+                _mainScreenBloc.add(MainScreenEvent.deleteAlarm(
+                    index: index, id: alarmList[index].id));
+              },
+              onEditPressed: () async {
+                final newDate = await _selectDate(context,
+                    previousAlarmDate: alarmList[index].date);
+                if (newDate != null) {
+                  if (context.mounted) {
+                    final newTime = await _selectTime(context, newDate,
+                        previousAlarmTime: alarmList[index].time);
+                    if (newTime != null) {
+                      _mainScreenBloc.add(
+                        MainScreenEvent.updateAlarm(
+                          index: index,
+                          alarm: AlarmModel(
+                            id: alarmList[index].id,
+                            isActive: false,
+                            time: newTime,
+                            date: newDate,
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+            ),
+          );
+        },
+        itemCount: alarmList.length);
   }
 
-  Future<void> _selectTime(BuildContext context, DateTime date) async {
-    final time = await DialogUtils.timePickerDialog(context: context);
-    time.fold((failure) => null, (time) async {
+  // floating action button onPressed
+  // adds alarm
+  Future<void> _onFloatingActionButtonTapped(BuildContext context) async {
+    final selectedDate = await _selectDate(context);
+
+    if (selectedDate != null && context.mounted) {
+      final time = await _selectTime(context, selectedDate);
+
       if (time != null) {
-        if (time.toDouble >=
-            ((TimeOfDay.now() + const TimeOfDay(hour: 0, minute: 10))
-                .toDouble)) {
-          context
-              .read<MainScreenBloc>()
-              .add(MainScreenEvent.saveAlarmToDB(time: time, date: date));
+        final int alarmId = DateTime.now().millisecondsSinceEpoch & 0xFFFFFFFF;
+        final AlarmModel alarm = AlarmModel(
+            time: time, date: selectedDate, isActive: false, id: alarmId);
+        _mainScreenBloc.add(MainScreenEvent.saveAlarmToDB(alarm: alarm));
+      }
+    }
+  }
+
+  // show date picker dialog
+  Future<DateTime?> _selectDate(BuildContext context,
+      {DateTime? previousAlarmDate}) async {
+    final date = await DialogUtils.datePickerDialog(
+        context: context, previousAlarmDate: previousAlarmDate);
+    return await date.fold((failure) {
+      return null;
+    }, (newDate) async => newDate);
+  }
+
+  // shows time picker dialog and check conditions for time
+  Future<TimeOfDay?> _selectTime(
+      BuildContext context, DateTime datePickedByUser,
+      {TimeOfDay? previousAlarmTime}) async {
+    late final TimeOfDay initialTimeToShowUser;
+    final dateNow = DateTime.now();
+
+    /// below if condition check which time should be shown to user
+    /// when firstly time picker dialog is opened
+    /// if date picked is the same as today then 10 minutes will be
+    /// added otherwise TimeOfDay.now() is shown
+    if (datePickedByUser.checkNotEqualityForOnlyYearMonthDay(dateNow)) {
+      initialTimeToShowUser = TimeOfDay.now();
+    } else {
+      initialTimeToShowUser = TimeOfDay.now() +
+          ConstantsResource.MINIMUM_TIME_ADDED_FROM_CURRENT_TIME;
+
+      /// previous alarm time is only shown when user is editing any alarm
+      /// then previous alarm time passed to time picker as initial time to show
+      if (previousAlarmTime != null && previousAlarmTime <= TimeOfDay.now()) {
+        previousAlarmTime = TimeOfDay.now() +
+            ConstantsResource.MINIMUM_TIME_ADDED_FROM_CURRENT_TIME;
+      }
+    }
+
+    final time = await DialogUtils.timePickerDialog(
+        context: context,
+        previousAlarmTime: previousAlarmTime ?? initialTimeToShowUser);
+    return await time.fold((failure) => null, (newPickedTime) async {
+      if (newPickedTime != null) {
+        if (datePickedByUser.checkNotEqualityForOnlyYearMonthDay(dateNow) ||
+            newPickedTime.toDouble >=
+                ((TimeOfDay.now() +
+                        ConstantsResource.MINIMUM_TIME_ADDED_FROM_CURRENT_TIME)
+                    .toDouble)) {
+          return newPickedTime;
         } else {
           context.showTextSnackBar(
               content: StringsResource.MIMINUM_TIME_SELECTION_STR);
-          await _selectTime(context, date);
+          return null;
         }
+      } else {
+        return null;
       }
-      // if (time != null) {
-      //   final timeNow = TimeOfDay.now();
-      //   if (timeNow.minute + 10 >= 60) {
-      //     final remainingMinutes = 60 - timeNow.minute;
-      //     final newTime =
-      //         TimeOfDay(hour: timeNow.hour + 1, minute: 10 - remainingMinutes);
-      //     if (time.toDouble >= newTime.toDouble) {
-      //       /// to do add alarm
-      //       context
-      //           .read<MainScreenBloc>()
-      //           .add(MainScreenEvent.saveAlarmToDB(time: time, date: date));
-      //     } else {
-      //       await _selectTime(context, date);
-      //     }
-      //   } else {
-      //     final newTime =
-      //         TimeOfDay(hour: timeNow.hour, minute: timeNow.minute + 10);
-      //     if (time.toDouble >= newTime.toDouble) {
-      //       /// to do add alarm
-      //       context
-      //           .read<MainScreenBloc>()
-      //           .add(MainScreenEvent.saveAlarmToDB(time: time, date: date));
-      //     } else {
-      //       await _selectTime(context, date);
-      //     }
-      //   }
-      // }
     });
-  }
-}
-
-class AlarmContainer extends StatefulWidget {
-  final TimeOfDay time;
-  final DateTime date;
-
-  const AlarmContainer({
-    super.key,
-    required this.time,
-    required this.date,
-  });
-
-  @override
-  State<AlarmContainer> createState() => _AlarmContainerState();
-}
-
-class _AlarmContainerState extends State<AlarmContainer> {
-  late final int _hours;
-  late final int _minutes;
-  late final String _period;
-
-  @override
-  void initState() {
-    super.initState();
-    _extractTime();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      margin: DimensionsResource.ALARM_CONTAINER_MARGIN,
-      padding: DimensionsResource.ALARM_CONTAINER_PADDING,
-      decoration: BoxDecoration(
-        color: ColorsResource.ALARM_TILE_BG_CLR,
-        borderRadius: BorderRadius.circular(DimensionsResource.PIXEL_10),
-      ),
-      child: ListTile(
-        leading: const Icon(
-          Icons.sunny,
-          size: DimensionsResource.ALARM_CONTAINER_LEADING_ICON_SIZE,
-          color: Colors.amberAccent,
-        ),
-        title: CustomText(
-          text: '$_hours:${_minutes >= 10 ? _minutes : '0$_minutes'} $_period',
-          textStyle: Theme.of(context)
-              .textTheme
-              .titleLarge
-              ?.copyWith(color: ColorsResource.WHITE_CLR),
-        ),
-        titleAlignment: ListTileTitleAlignment.center,
-      ),
-    );
-  }
-
-  void _extractTime() {
-    if (widget.time.hour > 12) {
-      _hours = widget.time.hour - 12;
-    } else {
-      _hours = widget.time.hour;
-    }
-    _minutes = widget.time.minute;
-    if (widget.time.period == DayPeriod.am) {
-      _period = 'am';
-    } else {
-      _period = 'pm';
-    }
   }
 }
