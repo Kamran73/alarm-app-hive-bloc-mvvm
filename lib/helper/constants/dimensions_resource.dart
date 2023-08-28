@@ -4,6 +4,7 @@ class DimensionsResource {
   DimensionsResource._();
 
   // pixels
+  static const double PIXEL_5 = 5;
   static const double PIXEL_10 = 10;
   static const double PIXEL_20 = 20;
 

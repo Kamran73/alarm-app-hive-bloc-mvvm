@@ -50,14 +50,16 @@ class AwesomeNotificationsService {
           channelName: ConstantsResource.ALARM_NOTIFICATION_CHANNEL_NAME,
           channelDescription:
               ConstantsResource.ALARM_NOTIFICATION_CHANNEL_DESCRIPTION,
-          importance: NotificationImportance.High,
+          importance: NotificationImportance.Default,
           channelShowBadge: true,
           defaultColor: ColorsResource.PRIMARY_CLR,
           enableVibration: true,
           playSound: true,
+          criticalAlerts: true,
+          soundSource: ConstantsResource.ALARM_CUSTOM_AUDIO_URL,
         ),
       ],
-      debug: false,
+      debug: true,
     );
   }
 

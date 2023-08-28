@@ -35,31 +35,4 @@ class DialogUtils {
       return left(Failure(errorMessage: exception.toString()));
     }
   }
-
-  static void alarmEditOrDeleteDialog({
-    required BuildContext context,
-    required VoidCallback onDeletePressed,
-    required VoidCallback onEditPressed,
-  }) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Do you want to edit or delete?'),
-        actions: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                onEditPressed();
-              },
-              child: const Text(StringsResource.EDIT_ALARM_STR)),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                onDeletePressed();
-              },
-              child: const Text(StringsResource.DELETE_ALARM_STR)),
-        ],
-      ),
-    );
-  }
 }

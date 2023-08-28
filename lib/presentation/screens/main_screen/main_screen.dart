@@ -69,58 +69,65 @@ class _MainScreenState extends State<MainScreen> {
   Widget _alarmListLoaded(List<AlarmModel> alarmList) {
     return ListView.builder(
         itemBuilder: (context, index) {
-          return AlarmContainer(
-            isActive: alarmList[index].isActive,
-            onSwitchToggled: (value) {
-              final AlarmModel updatedAlarm = AlarmModel(
-                  time: alarmList[index].time,
-                  date: alarmList[index].date,
-                  isActive: value,
-                  id: alarmList[index].id);
-              _mainScreenBloc.add(MainScreenEvent.updateAlarm(
-                index: index,
-                alarm: updatedAlarm,
-                // is toggled only checks if alarm update is about activating or deactivating alarm
-                // we passed true because we are activating/deactivating alarm without changing time/date
-                isToggled: true,
-              ));
-            },
-            time: alarmList[index].time,
-            date: alarmList[index].date,
-            onLongPressed: () => DialogUtils.alarmEditOrDeleteDialog(
-              context: context,
-              onDeletePressed: () {
-                _mainScreenBloc.add(MainScreenEvent.deleteAlarm(
-                    index: index, id: alarmList[index].id));
-              },
-              onEditPressed: () async {
-                final newDate = await _selectDate(context,
-                    previousAlarmDate: alarmList[index].date);
-                if (newDate != null) {
-                  if (context.mounted) {
-                    final newTime = await _selectTime(context, newDate,
-                        previousAlarmTime: alarmList[index].time);
-                    if (newTime != null) {
-                      _mainScreenBloc.add(
-                        MainScreenEvent.updateAlarm(
-                          index: index,
-                          alarm: AlarmModel(
-                            id: alarmList[index].id,
-                            isActive: false,
-                            time: newTime,
-                            date: newDate,
+          return Column(
+            children: [
+              AlarmContainer(
+                isActive: alarmList[index].isActive,
+                onSwitchToggled: (value) {
+                  final AlarmModel updatedAlarm = AlarmModel(
+                      time: alarmList[index].time,
+                      date: alarmList[index].date,
+                      isActive: value,
+                      id: alarmList[index].id);
+                  _mainScreenBloc.add(MainScreenEvent.updateAlarm(
+                    index: index,
+                    alarm: updatedAlarm,
+                    // is toggled only checks if alarm update is about activating or deactivating alarm
+                    // we passed true because we are activating/deactivating alarm without changing time/date
+                    isToggled: true,
+                  ));
+                },
+                time: alarmList[index].time,
+                date: alarmList[index].date,
+                onDeletePressed: () {
+                  _mainScreenBloc.add(MainScreenEvent.deleteAlarm(
+                      index: index, id: alarmList[index].id));
+                },
+                onEditPressed: () async {
+                  final newDate = await _selectDate(context,
+                      previousAlarmDate: alarmList[index].date);
+                  if (newDate != null) {
+                    if (context.mounted) {
+                      final newTime = await _selectTime(context, newDate,
+                          previousAlarmTime: alarmList[index].time);
+                      if (newTime != null) {
+                        _mainScreenBloc.add(
+                          MainScreenEvent.updateAlarm(
+                            index: index,
+                            alarm: AlarmModel(
+                              id: alarmList[index].id,
+                              isActive: false,
+                              time: newTime,
+                              date: newDate,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     }
                   }
-                }
-              },
-            ),
+                },
+              ),
+              if (index == alarmList.length - 1)
+                SizedBox(
+                  height: context.responsiveHeight(50),
+                ),
+            ],
           );
         },
         itemCount: alarmList.length);
   }
+
+  void _onEditPressed(int index) {}
 
   // floating action button onPressed
   // adds alarm
@@ -133,7 +140,7 @@ class _MainScreenState extends State<MainScreen> {
       if (time != null) {
         final int alarmId = DateTime.now().millisecondsSinceEpoch & 0xFFFFFFFF;
         final AlarmModel alarm = AlarmModel(
-            time: time, date: selectedDate, isActive: false, id: alarmId);
+            time: time, date: selectedDate, isActive: true, id: alarmId);
         _mainScreenBloc.add(MainScreenEvent.saveAlarmToDB(alarm: alarm));
       }
     }

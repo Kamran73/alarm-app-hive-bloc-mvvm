@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:task_10/helper/extensions/context_extensions.dart';
 import 'package:task_10/helper/extensions/date_time_extension.dart';
 import 'package:task_10/helper/extensions/time_of_day_extension.dart';
 
@@ -10,17 +11,19 @@ import 'custom_text.dart';
 class AlarmContainer extends StatefulWidget {
   final TimeOfDay time;
   final DateTime date;
-  final VoidCallback onLongPressed;
   final bool isActive;
+  final VoidCallback onEditPressed;
+  final VoidCallback onDeletePressed;
   final void Function(bool)? onSwitchToggled;
 
   const AlarmContainer({
     super.key,
     required this.time,
     required this.date,
-    required this.onLongPressed,
     required this.isActive,
     required this.onSwitchToggled,
+    required this.onEditPressed,
+    required this.onDeletePressed,
   });
 
   @override
@@ -53,15 +56,36 @@ class _AlarmContainerState extends State<AlarmContainer> {
         borderRadius: BorderRadius.circular(DimensionsResource.PIXEL_10),
       ),
       child: ListTile(
-        // we only provide edit or delete functionality to which if alarm is expired or alarm is not activated
-        onLongPress:
-            _isExpired() || !widget.isActive ? widget.onLongPressed : null,
         leading: _icon,
-        title: CustomText(
-          text: '$_hours:${_minutes >= 10 ? _minutes : '0$_minutes'} $_period',
-          textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: ColorsResource.WHITE_CLR,
-              decoration: _isExpired() ? TextDecoration.lineThrough : null),
+        title: Row(
+          children: [
+            CustomText(
+              text:
+                  '$_hours:${_minutes >= 10 ? _minutes : '0$_minutes'} $_period',
+              textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: ColorsResource.WHITE_CLR,
+                  decoration: _isExpired() ? TextDecoration.lineThrough : null),
+            ),
+            SizedBox(
+              width: context.responsiveWidth(DimensionsResource.PIXEL_20),
+            ),
+            // we only provide edit or delete functionality to which if alarm is expired or alarm is not activated
+
+            if (_isExpired() || !widget.isActive)
+              Row(
+                children: [
+                  GestureDetector(
+                      onTap: widget.onDeletePressed,
+                      child: const Icon(CupertinoIcons.delete)),
+                  SizedBox(
+                    width: context.responsiveWidth(DimensionsResource.PIXEL_10),
+                  ),
+                  GestureDetector(
+                      onTap: widget.onEditPressed,
+                      child: const Icon(Icons.edit_calendar)),
+                ],
+              ),
+          ],
         ),
         subtitle: CustomText(
           text: _day,

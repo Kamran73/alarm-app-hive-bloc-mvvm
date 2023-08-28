@@ -41,7 +41,9 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
             date: alarm.date,
             isActive: alarm.isActive,
             id: alarm.id));
-    await _foldData(result, emit, onSuccess: () {});
+    await _foldData(result, emit,
+        onSuccess: () async =>
+            await notificationsCubit.addNotificationForAlarm(alarm));
   }
 
   Future<void> _deleteAlarm(int index, Emitter emit, int id) async {
