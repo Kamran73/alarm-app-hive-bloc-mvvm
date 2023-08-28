@@ -16,7 +16,7 @@ class ConstantsResource {
 
   // minimum time added from current time
   static const MINIMUM_TIME_ADDED_FROM_CURRENT_TIME =
-      TimeOfDay(hour: 0, minute: 10);
+      TimeOfDay(hour: 0, minute: 15);
 
   // native resources
   static const ALARM_CUSTOM_AUDIO_URL =

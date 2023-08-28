@@ -90,8 +90,11 @@ class _MainScreenState extends State<MainScreen> {
                 time: alarmList[index].time,
                 date: alarmList[index].date,
                 onDeletePressed: () {
-                  _mainScreenBloc.add(MainScreenEvent.deleteAlarm(
-                      index: index, id: alarmList[index].id));
+                  DialogUtils.alarmEditOrDeleteDialog(
+                      context: context,
+                      onDeletePressed: () => _mainScreenBloc.add(
+                          MainScreenEvent.deleteAlarm(
+                              index: index, id: alarmList[index].id)));
                 },
                 onEditPressed: () async {
                   final newDate = await _selectDate(context,
@@ -126,8 +129,6 @@ class _MainScreenState extends State<MainScreen> {
         },
         itemCount: alarmList.length);
   }
-
-  void _onEditPressed(int index) {}
 
   // floating action button onPressed
   // adds alarm

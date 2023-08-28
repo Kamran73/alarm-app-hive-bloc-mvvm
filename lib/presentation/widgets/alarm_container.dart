@@ -66,25 +66,7 @@ class _AlarmContainerState extends State<AlarmContainer> {
                   color: ColorsResource.WHITE_CLR,
                   decoration: _isExpired() ? TextDecoration.lineThrough : null),
             ),
-            SizedBox(
-              width: context.responsiveWidth(DimensionsResource.PIXEL_20),
-            ),
             // we only provide edit or delete functionality to which if alarm is expired or alarm is not activated
-
-            if (_isExpired() || !widget.isActive)
-              Row(
-                children: [
-                  GestureDetector(
-                      onTap: widget.onDeletePressed,
-                      child: const Icon(CupertinoIcons.delete)),
-                  SizedBox(
-                    width: context.responsiveWidth(DimensionsResource.PIXEL_10),
-                  ),
-                  GestureDetector(
-                      onTap: widget.onEditPressed,
-                      child: const Icon(Icons.edit_calendar)),
-                ],
-              ),
           ],
         ),
         subtitle: CustomText(
@@ -93,9 +75,32 @@ class _AlarmContainerState extends State<AlarmContainer> {
           decoration: _isExpired() ? TextDecoration.lineThrough : null,
         ),
         titleAlignment: ListTileTitleAlignment.center,
-        trailing: CupertinoSwitch(
-          value: _isExpired() ? false : widget.isActive,
-          onChanged: _isExpired() ? (value) {} : widget.onSwitchToggled,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_isExpired() || !widget.isActive)
+              Row(
+                children: [
+                  GestureDetector(
+                      onTap: widget.onDeletePressed,
+                      child: const Icon(CupertinoIcons.delete)),
+                  SizedBox(
+                    width: context.responsiveWidth(DimensionsResource.PIXEL_20),
+                  ),
+                  GestureDetector(
+                    onTap: widget.onEditPressed,
+                    child: const Icon(Icons.edit_calendar),
+                  ),
+                  SizedBox(
+                    width: context.responsiveWidth(DimensionsResource.PIXEL_20),
+                  ),
+                ],
+              ),
+            CupertinoSwitch(
+              value: _isExpired() ? false : widget.isActive,
+              onChanged: _isExpired() ? (value) {} : widget.onSwitchToggled,
+            ),
+          ],
         ),
       ),
     );

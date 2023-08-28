@@ -35,4 +35,29 @@ class DialogUtils {
       return left(Failure(errorMessage: exception.toString()));
     }
   }
+
+  static void alarmEditOrDeleteDialog({
+    required BuildContext context,
+    required VoidCallback onDeletePressed,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(StringsResource.DELETE_ALARM_SURETY_MSG_STR),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(StringsResource.CANCEL_ALARM_STR)),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                onDeletePressed();
+              },
+              child: const Text(StringsResource.DELETE_ALARM_STR)),
+        ],
+      ),
+    );
+  }
 }
