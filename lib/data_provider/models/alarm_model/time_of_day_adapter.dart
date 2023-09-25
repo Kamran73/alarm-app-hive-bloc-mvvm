@@ -3,6 +3,8 @@ import 'package:hive/hive.dart';
 
 class TimeOfDayAdapter extends TypeAdapter<TimeOfDay> {
   @override
+
+  /// this typeId is random so you can set typeId whatever you want other than 1
   final typeId = 200;
 
   @override

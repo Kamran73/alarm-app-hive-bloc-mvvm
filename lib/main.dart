@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Task 10',
+        title: 'Alarm',
         theme: AppTheme.themeData,
         home: const MainScreen(),
       ),
