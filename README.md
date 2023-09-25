@@ -1,16 +1,10 @@
-# task_10
-
-Background Services
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Alarm app 
+1. this app is about how to implement Hive and use custom and typeAdapters to fulfill your needs
+showing how powerful Hive is. you can listen directly to changes made in the hive
+2. implements bloc for separation of business logic from the presentation layer
+3. implemented mixed MVVM architecture
+4. shows how you can use extension functions to write your custom implementations for multiple operators
+5. restricts users to set alarm 10 minutes later from now
+6. User can add, delete, and edit alarms
+7. notifications will be automatically triggered on alarm time, even if the app is in background state or even terminated using AwesomeNotificationsFlutter,
+which uses CRON manager behind the scenes and makes it easy for you to trigger notifications during multiple app states.
